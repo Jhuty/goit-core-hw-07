@@ -101,6 +101,8 @@ class AddressBook(UserDict):
 
 
 def parse_input(user_input):
+    if not user_input.strip():
+        return None, []
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args,
@@ -118,7 +120,7 @@ def input_error(func):
 
     return inner
 @input_error
-def add_contact(args, book):   #
+def add_contact(args, book):
     name, phone = args
     record = Record(name)
     record.add_phone(phone)
@@ -126,7 +128,7 @@ def add_contact(args, book):   #
     return "Contact added."
 
 @input_error
-def change_contact(args, book):   #
+def change_contact(args, book):
     name, new_phone = args
     record = book.find(name)
     if record is not None:
@@ -137,7 +139,7 @@ def change_contact(args, book):   #
         return f"Contact {name} not found."
     
 @input_error
-def show_phone(args, book):   #
+def show_phone(args, book):
     name = args[0]
     if name in book:
         return book[name]
@@ -190,6 +192,9 @@ def main():
     while True:
         user_input = input("Enter a command: ")
         command, *args = parse_input(user_input)
+
+        if command is None:
+            continue
 
         if command in ["close", "exit"]:
             print("Good bye!")
